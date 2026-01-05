@@ -95,6 +95,12 @@
             "label": "Videos"
           },
           {
+            "icon": "🎵",
+            "image": "https://www.verizon.com/dam/icons/audio.svg",
+            "value": "156",
+            "label": "Audio Files"
+          },
+          {
             "icon": "💾",
             "image": "https://www.verizon.com/dam/icons/cloud-storage.svg",
             "value": "24.5 GB",
