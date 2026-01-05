@@ -2,13 +2,4 @@ services:
   - type: web
     name: vz-cloud-dashboard
     env: static
-    buildCommand: echo "No build required - static site"
     staticPublishPath: .
-    headers:
-      - path: /*
-        name: Cache-Control
-        value: public, max-age=3600
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /vz-cloud-dashboard.html
