@@ -97,8 +97,8 @@
           {
             "icon": "🎵",
             "image": "https://www.verizon.com/dam/icons/audio.svg",
-            "value": "156",
-            "label": "Audio Files"
+            "value": "0",
+            "label": "Audios"
           },
           {
             "icon": "💾",
