@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>VZ Cloud Dashboard</title>
+  <link rel="icon" href="https://www.verizon.com/favicon.ico" sizes="any" type="image/x-icon">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div class="container" id="app">
+    <div class="loading">
+      <div class="loading-spinner"></div>
+      <p>Loading...</p>
+    </div>
+  </div>
+
+  <script>
+    // Configuration
+    const API_URL_PARAM = 'apiUrl';
+    const DATA_PARAM = 'data';
+    
+    // Get data from URL parameters or API
+    async function getData() {
+      const params = new URLSearchParams(window.location.search);
+      
+      // Check if data is passed as URL parameter
+      const encodedData = params.get(DATA_PARAM);
+      if (encodedData) {
+        try {
+          return JSON.parse(atob(encodedData));
+        } catch (e) {
+          console.error('Error parsing data parameter:', e);
+        }
+      }
+      
+      // Check if API URL is provided
+      const apiUrl = params.get(API_URL_PARAM);
+      if (apiUrl) {
+        try {
+          const response = await fetch(apiUrl);
+          return await response.json();
+        } catch (e) {
+          console.error('Error fetching data from API:', e);
+          throw e;
+        }
+      }
+      
+      // Return sample data for testing
+      return getSampleData();
+    }
+
+    // Sample data for testing - Verizon Business Theme
+    // RECOMMENDED IMAGES FOR JSON DATA:
+    // - Photos: Use cloud storage icon or gallery icon (e.g., "https://www.verizon.com/dam/icons/cloud-photos.svg")
+    // - Documents: Use document/file icon (e.g., "https://www.verizon.com/dam/icons/documents.svg")
+    // - Videos: Use video camera icon (e.g., "https://www.verizon.com/dam/icons/video.svg")
+    // - Storage: Use cloud/database icon (e.g., "https://www.verizon.com/dam/icons/cloud-storage.svg")
+    // - Backup: Use backup/sync icon (e.g., "https://www.verizon.com/dam/icons/backup.svg")
+    // - Devices: Use phone/tablet icons (e.g., "https://www.verizon.com/dam/devices/smartphone.png")
+    // - Services: Use service-specific branded icons (e.g., "https://www.verizon.com/dam/icons/5g-icon.svg")
+    
+    function getSampleData() {
+      return {
+        header: {
+          title: "Verizon Cloud",
+          breadcrumb: [
+            { text: 'Home', url: 'https://www.verizon.com/business' },
+            { text: 'Products & plan perks', url: 'https://www.verizon.com/business/products' },
+            { text: 'Verizon Cloud', url: '' }
+          ]
+        },
+        cards: [
+          { 
+            icon: "📷", 
+            value: "1,234", 
+            label: "Photos",
+            // Recommended: image: "https://www.verizon.com/dam/icons/cloud-photos.svg"
+          },
+          { 
+            icon: "📄", 
+            value: "89", 
+            label: "Documents",
+            // Recommended: image: "https://www.verizon.com/dam/icons/documents.svg"
+          },
+          { 
+            icon: "🎬", 
+            value: "45", 
+            label: "Videos",
+            // Recommended: image: "https://www.verizon.com/dam/icons/video.svg"
+          },
+          { 
+            icon: "🎵", 
+            value: "12", 
+            label: "Audio Files",
+            // Recommended: image: "https://www.verizon.com/dam/icons/audio.svg"
+          },
+          { 
+            icon: "💾", 
+            value: "24.5 GB", 
+            label: "Storage Used",
+            // Recommended: image: "https://www.verizon.com/dam/icons/cloud-storage.svg"
+          },
+          { 
+            icon: "☁️", 
+            value: "Jan 4", 
+            label: "Last Backup",
+            // Recommended: image: "https://www.verizon.com/dam/icons/backup.svg"
+          }
+        ],
+        actions: [
+          { 
+            icon: "☁️", 
+            text: "Back Up Now", 
+            type: "backup",
+            style: "primary"
+          },
+          { 
+            icon: "📁", 
+            text: "Manage Files", 
+            type: "files",
+            style: "action"
+          },
+          { 
+            icon: "💬", 
+            text: "User Feedback", 
+            type: "feedback",
+            style: "action"
+          },
+          { 
+            icon: "⚙️", 
+            text: "Settings", 
+            type: "settings",
+            style: "action"
+          },
+          { 
+            icon: "📊", 
+            text: "View Storage Details", 
+            type: "storage",
+            style: "action"
+          },
+          { 
+            icon: "🔄", 
+            text: "Sync Devices", 
+            type: "sync",
+            style: "action"
+          },
+          { 
+            icon: "📱", 
+            text: "Connected Devices", 
+            type: "devices",
+            style: "action"
+          },
+          { 
+            icon: "🔐", 
+            text: "Privacy & Security", 
+            type: "privacy",
+            style: "action"
+          }
+        ],
+        status: {
+          title: "Cloud Status",
+          items: [
+            { label: "Photos", value: "1,234" },
+            { label: "Documents", value: "89" },
+            { label: "Videos", value: "45" },
+            { label: "Audio Files", value: "12" },
+            { label: "Storage Used", value: "24.5 GB" },
+            { label: "Storage Available", value: "75.5 GB" },
+            { label: "Total Storage", value: "100 GB" },
+            { label: "Active Devices", value: "3" },
+            { label: "Last Backup", value: "January 4, 2026 at 11:30 PM" },
+            { label: "Backup Status", value: "Up to date" }
+          ]
+        },
+        message: {
+          title: "Your content is protected",
+          text: "All your photos, videos, and documents are safely backed up to Verizon Cloud. Your last backup was on January 4, 2026."
+        },
+        subscription: {
+          title: "VZ Cloud Subscription Active",
+          text: "Your 100GB plan is active. Upgrade to unlimited storage for just $9.99/month."
+        },
+        menuItems: [
+          {
+            icon: "📥",
+            text: "Download All Content",
+            type: "download"
+          },
+          {
+            icon: "🗑️",
+            text: "Manage Deleted Items",
+            type: "trash"
+          },
+          {
+            icon: "👤",
+            text: "Account Settings",
+            type: "account"
+          },
+          {
+            icon: "❓",
+            text: "Help & Support",
+            type: "help"
+          }
+        ]
+      };
+    }
+
+    // Render header
+    function renderHeader(header) {
+      if (!header) return '';
+      
+      const breadcrumb = header.breadcrumb || [
+        { text: 'Home', url: 'https://www.verizon.com/business' },
+        { text: 'Products & plan perks', url: 'https://www.verizon.com/business/products' },
+        { text: header.title || 'Unlimited Cloud Storage', url: '' }
+      ];
+      
+      const breadcrumbHTML = breadcrumb.map((item, index) => {
+        if (index === breadcrumb.length - 1) {
+          return `<strong>${item.text}</strong>`;
+        }
+        return `<a href="${item.url}">${item.text}</a><span>/</span>`;
+      }).join('');
+      
+      return `
+        <div class="header">
+          <!-- Top Navigation -->
+          <div class="header-top">
+            <a href="https://www.verizon.com/business/" class="header-logo" title="Verizon Business">
+              <img src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNTAwIDE4MyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGRlZnM+PC9kZWZzPgo8ZyB0cmFuc2Zvcm09Im1hdHJpeCgwLjgyMTUzNSwgMCwgMCwgMC44MjE1MzUsIC03OS4wMTgzMDcsIC03OS4wNDE1MzkpIiBzdHlsZT0iIj4KPGc+CjxnPgo8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMzI2Ljc3NSwzMTYuMjE4Yy0yLjc5NS0xLjUxMi00Ljk1LTMuODc5LTYuNDYyLTcuMTAyaC0wLjE5N3Y3LjY5NWgtMTQuODk3di03My4zOThoMTUuNDl2MTYuMDggYzAsMi4yMzctMC4wNSw0LjQyNC0wLjE0OSw2LjU2Yy0wLjA5OCwyLjEzOS0wLjIxNSwzLjk5Ni0wLjM0NSw1LjU3NGgwLjI5NWMxLjc3Ny0yLjY5NCwzLjkxNC00LjgzMyw2LjQxNC02LjQxMSBjMi40OTgtMS41NzgsNS41ODgtMi4zNjcsOS4yNzMtMi4zNjdjMy40MiwwLDYuNTEyLDAuNjkxLDkuMjczLDIuMDdjMi43NjMsMS4zODIsNS4xMywzLjMwNSw3LjEwNCw1Ljc3MyBjMS45NzIsMi40NjYsMy41MDIsNS4zOTQsNC41ODYsOC43NzljMS4wODYsMy4zODgsMS42MjksNy4wODgsMS42MjksMTEuMDk4YzAsNC4zNDEtMC41MjYsOC4yMzktMS41NzgsMTEuNjkxIGMtMS4wNTIsMy40NTQtMi41NjQsNi4zODItNC41MzgsOC43ODFjLTEuOTc0LDIuNDAyLTQuMzQxLDQuMjQzLTcuMTAyLDUuNTI0Yy0yLjc2MywxLjI4My01Ljg1NiwxLjkyNC05LjI3NSwxLjkyNCBDMzMyLjc0NSwzMTguNDg3LDMyOS41NywzMTcuNzMyLDMyNi43NzUsMzE2LjIxOHogTTM0MC4yOSwzMDEuODE0YzEuODA5LTIuODI3LDIuNzEzLTYuNjA4LDIuNzEzLTExLjM0NSBjMC00LjczNS0wLjkwNC04LjU2Ni0yLjcxMy0xMS40OTJjLTEuODA5LTIuOTI4LTQuNTU0LTQuMzkyLTguMjM3LTQuMzkyYy0yLjA0LDAtMy43OTksMC40MTItNS4yNzksMS4yMzMgYy0xLjQ4LDAuODIzLTIuNzEzLDEuOTQyLTMuNjk5LDMuMzU1Yy0wLjk4OCwxLjQxNC0xLjcxMSwzLjEwNi0yLjE3MSw1LjA4Yy0wLjQ2MiwxLjk3NC0wLjY5MSw0LjA3OC0wLjY5MSw2LjMxMyBjMCw0LjYwNCwxLjA1Miw4LjMzNywzLjE1NywxMS4xOTlzNS4wMzIsNC4yOTEsOC43ODEsNC4yOTFDMzM1Ljc2OCwzMDYuMDU3LDMzOC40ODEsMzA0LjY0NCwzNDAuMjksMzAxLjgxNHoiIHN0eWxlPSJmaWxsOiByZ2IoMjQ1LCAxMCwgMzUpOyI+PC9wYXRoPgo8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMzk4LjA1MiwzMDkuMzEyaC0wLjI5N2MtMS45MDgsMy4wOTItNC4xMSw1LjM2MS02LjYwOCw2LjgwN2MtMi41LDEuNDQ2LTUuNTU4LDIuMTcxLTkuMTc0LDIuMTcxIGMtNS45ODYsMC0xMC41NTYtMS43NTktMTMuNzE1LTUuMjc3Yy0zLjE1Ni0zLjUxOC00LjczNS04LjE3My00LjczNS0xMy45NnYtMzQuNzI2aDE1LjQ5djMxLjc2NmMwLDIuOTYsMC43MDQsNS4yMjksMi4xMiw2LjgwNyBjMS40MTQsMS41NzgsMy41MDIsMi4zNjcsNi4yNjUsMi4zNjdjMy4xNTcsMCw1LjYyMi0xLjA1Miw3LjQtMy4xNTZjMS43NzUtMi4xMDQsMi42NjItNC44MDEsMi42NjItOC4wOXYtMjkuNjk0aDE1LjI5MXY1Mi40ODMgaC0xNC42OThWMzA5LjMxMnoiIHN0eWxlPSJmaWxsOiByZ2IoMjQ1LCAxMCwgMzUpOyI+PC9wYXRoPgo8cGF0aCBjbGFzcz0ic3QwIiBkPSJNNDMxLjk4NywzMTcuMjA2Yy0zLjAyNi0wLjg1NS01LjYwNi0yLjA3Mi03Ljc0My0zLjY1MWMtMi4xMzktMS41NzgtMy44MTUtMy40NjgtNS4wMzItNS42NzMgYy0xLjIxNy0yLjIwMy0xLjkyNC00LjYyLTIuMTItNy4yNTFoMTQuNmMwLjQ2LDIuNSwxLjU5NCw0LjQwOCwzLjQwNCw1LjcyMWMxLjgwNywxLjMxOCw0LjIyNSwxLjk3NCw3LjI1MSwxLjk3NCBjMi43NjMsMCw0Ljg5OS0wLjUyNiw2LjQxNC0xLjU3OGMxLjUxMi0xLjA1MiwyLjI2OS0yLjUzMiwyLjI2OS00LjQ0YzAtMS4xODUtMC4zNjQtMi4xMzYtMS4wODYtMi44NjEgYy0wLjcyNS0wLjcyMy0xLjcxMS0xLjMxNS0yLjk2LTEuNzc1cy0yLjY4MS0wLjgzOS00LjI5MS0xLjEzNWMtMS42MTMtMC4yOTctMy4zNC0wLjYwOC01LjE3OC0wLjkzOCBjLTIuMzY3LTAuNDYtNC42NzEtMC45ODYtNi45MDUtMS41NzhjLTIuMjM3LTAuNTkyLTQuMjQzLTEuNDgtNi4wMTgtMi42NjVjLTEuNzc3LTEuMTgzLTMuMjA3LTIuNzI3LTQuMjkzLTQuNjM2IGMtMS4wODQtMS45MDUtMS42MjYtNC40MDUtMS42MjYtNy40OThjMC0yLjY5NCwwLjU3NC01LjA2MiwxLjcyNS03LjEwMmMxLjE1MS0yLjAzOCwyLjcxNS0zLjc0OSw0LjY4Ny01LjEzIGMxLjk3NC0xLjM4Miw0LjMwNy0yLjQxOCw3LjAwNC0zLjEwNmMyLjY5Ny0wLjY5MSw1LjU5LTEuMDM2LDguNjgzLTEuMDM2YzcuMzAxLDAsMTIuODI1LDEuNDMsMTYuNTc0LDQuMjkxIGMzLjc0OSwyLjg2MSw1Ljk4NCw2LjU5NCw2LjcwOSwxMS4xOTZoLTE0LjQwM2MtMC45ODgtMy43NDktMy45NDYtNS42MjItOC44NzktNS42MjJjLTIuMzY3LDAtNC4yNTksMC40Ni01LjY3MywxLjM4MiBjLTEuNDE2LDAuOTIyLTIuMTIsMi4yMzUtMi4xMiwzLjk0NmMwLDAuOTg2LDAuMzI3LDEuNzkzLDAuOTg2LDIuNDE4YzAuNjU2LDAuNjI0LDEuNTc4LDEuMTM1LDIuNzYzLDEuNTI4IGMxLjE4MywwLjM5NiwyLjU2NCwwLjcyNSw0LjE0MiwwLjk4NmMxLjU3OCwwLjI2NSwzLjI1NSwwLjU2LDUuMDMyLDAuODljMi4zNjcsMC4zOTMsNC43MzUsMC45MDQsNy4xMDIsMS41MjggYzIuMzY3LDAuNjI3LDQuNTA0LDEuNTYyLDYuNDE0LDIuODExYzEuOTA1LDEuMjUxLDMuNDY4LDIuOTEyLDQuNjg0LDQuOTgyYzEuMjE3LDIuMDcyLDEuODI1LDQuNzUzLDEuODI1LDguMDQyIGMwLDIuODI3LTAuNTksNS4zMjctMS43NzUsNy40OThjLTEuMTg1LDIuMTY4LTIuODI5LDMuOTgtNC45MzQsNS40MjZjLTIuMTA0LDEuNDQ4LTQuNjA0LDIuNTMyLTcuNDk2LDMuMjU1IGMtMi44OTYsMC43MjMtNi4wNTIsMS4wODQtOS40NzIsMS4wODRDNDM4LjQzMywzMTguNDg3LDQzNS4wMTMsMzE4LjA1OSw0MzEuOTg3LDMxNy4yMDZ6IiBzdHlsZT0iZmlsbDogcmdiKDI0NSwgMTAsIDM1KTsiPjwvcGF0aD4KPHBhdGggY2xhc3M9InN0MCIgZD0iTTQ4Ni42NDMsMjQzLjQxMnYxMy41MTZoLTE1LjY4NnYtMTMuNTE2SDQ4Ni42NDN6IE00ODYuNTQ0LDI2NC4zMjh2NTIuNDgzaC0xNS40OXYtNTIuNDgzSDQ4Ni41NDR6IiBzdHlsZT0iZmlsbDogcmdiKDI0NSwgMTAsIDM1KTsiPjwvcGF0aD4KPHBhdGggY2xhc3M9InN0MCIgZD0iTTUwOS41MjcsMjcyLjMxN2MxLjY0NS0zLjE1NywzLjgzMS01LjUyNCw2LjU2Mi03LjEwMmMyLjcyNy0xLjU3OCw1LjkzMy0yLjM2Nyw5LjYxOC0yLjM2NyBjNS43ODcsMCwxMC4yNzUsMS43NTksMTMuNDY2LDUuMjc3YzMuMTkxLDMuNTIsNC43ODUsOC4yMzksNC43ODUsMTQuMTU2djM0LjUyOWgtMTUuMzg5di0zMS41N2MwLTIuODkzLTAuNzQxLTUuMjExLTIuMjIxLTYuOTUzIGMtMS40OC0xLjc0My0zLjY2Ny0yLjYxNC02LjU2LTIuNjE0Yy0zLjAyNiwwLTUuNDYsMS4wODQtNy4zMDEsMy4yNTVzLTIuNzYxLDQuOTM0LTIuNzYxLDguMjg3djI5LjU5NmgtMTUuNDl2LTUyLjQ4M2gxNC45OTYgdjcuOTlINTA5LjUyN3oiIHN0eWxlPSJmaWxsOiByZ2IoMjQ1LCAxMCwgMzUpOyI+PC9wYXRoPgo8cGF0aCBjbGFzcz0ic3QwIiBkPSJNNTY0Ljk3LDMxNi4yNjhjLTMuNDItMS40MTQtNi4zMzEtMy4zNjktOC43MzEtNS44NjljLTIuNDAyLTIuNS00LjI0MS01LjQyNi01LjUyNC04Ljc4MSBjLTEuMjgzLTMuMzUzLTEuOTI0LTcuMDA0LTEuOTI0LTEwLjk0OWMwLTMuOTQ4LDAuNjU2LTcuNjEyLDEuOTcyLTExLjAwMmMxLjMxNS0zLjM4NSwzLjE1OS02LjMyOSw1LjUyNi04LjgyOSBjMi4zNjctMi40OTgsNS4xOTUtNC40NTMsOC40ODQtNS44NjljMy4yODctMS40MTQsNi45MzctMi4xMiwxMC45NTItMi4xMmMzLjc0NywwLDcuMTE4LDAuNTksMTAuMTEsMS43NzUgYzIuOTk0LDEuMTg1LDUuNjQxLDIuODI5LDcuOTQyLDQuOTM0YzIuOTYsMi44OTMsNS4xMyw2LjQ3OCw2LjUxMiwxMC43NTNjMS4zODIsNC4yNzUsMi4wMzgsOS4wMTIsMS45NzQsMTQuMjA3aC0zOC4yNzggYzAuNTI2LDMuOTQ2LDEuODQxLDcuMDM4LDMuOTQ2LDkuMjczYzIuMTA0LDIuMjM3LDUuMDMyLDMuMzUzLDguNzgxLDMuMzUzYzIuNDMxLDAsNC40MjEtMC40NDQsNS45NjgtMS4zMzEgYzEuNTQ2LTAuODg3LDIuNzQ1LTIuMTUyLDMuNjAzLTMuNzk3aDE0Ljk5M2MtMC42NTYsMi4zMDEtMS42OTMsNC40NTYtMy4xMDYsNi40NjJjLTEuNDE2LDIuMDA2LTMuMTU2LDMuNzQ5LTUuMjI5LDUuMjI5IGMtMi4wNzIsMS40OC00LjQ5LDIuNjMtNy4yNTEsMy40NTJjLTIuNzYzLDAuODIxLTUuODIxLDEuMjMzLTkuMTc0LDEuMjMzQzU3Mi4yMzcsMzE4LjM4OCw1NjguMzg5LDMxNy42ODIsNTY0Ljk3LDMxNi4yNjh6ICBNNTU2Ny42MzQsMjc2Ljk1NGMtMS44NDQsMi4xMDctMy4wMjYsNC45NjgtMy41NTIsOC41ODRoMjIuMzk1Yy0wLjI2My0zLjY4My0xLjM1LTYuNTYtMy4yNTctOC42MzIgYy0xLjkwOC0yLjA3Mi00LjQwNS0zLjEwOC03LjQ5Ni0zLjEwOEM1NzIuMTcyLDI3My43OTcsNTY5LjQ3MywyNzQuODQ5LDU2Ny42MzQsMjc2Ljk1NHoiIHN0eWxlPSJmaWxsOiByZ2IoMjQ1LCAxMCwgMzUpOyI+PC9wYXRoPgo8cGF0aCBjbGFzcz0ic3QwIiBkPSJNNjE5LjAzMywzMTcuMjA2Yy0zLjAyNi0wLjg1NS01LjYwOS0yLjA3Mi03Ljc0NS0zLjY1MWMtMi4xMzktMS41NzgtMy44MTUtMy40NjgtNS4wMzItNS42NzMgYy0xLjIxNy0yLjIwMy0xLjkyNC00LjYyLTIuMTItNy4yNTFoMTQuNmMwLjQ2LDIuNSwxLjU5NCw0LjQwOCwzLjQwNCw1LjcyMWMxLjgwOSwxLjMxOCw0LjIyNywxLjk3NCw3LjI1MywxLjk3NCBjMi43NjEsMCw0Ljg5Ny0wLjUyNiw2LjQxMS0xLjU3OGMxLjUxMi0xLjA1MiwyLjI2OS0yLjUzMiwyLjI2OS00LjQ0YzAtMS4xODUtMC4zNjEtMi4xMzYtMS4wODQtMi44NjEgYy0wLjcyNS0wLjcyMy0xLjcxMS0xLjMxNS0yLjk2LTEuNzc1Yy0xLjI1MS0wLjQ2LTIuNjgxLTAuODM5LTQuMjkxLTEuMTM1Yy0xLjYxMy0wLjI5Ny0zLjM0LTAuNjA4LTUuMTgxLTAuOTM4IGMtMi4zNjctMC40Ni00LjY3MS0wLjk4Ni02LjkwNS0xLjU3OGMtMi4yMzctMC41OTItNC4yNDMtMS40OC02LjAxOC0yLjY2NWMtMS43NzUtMS4xODMtMy4yMDctMi43MjctNC4yOTEtNC42MzYgYy0xLjA4Ni0xLjkwNS0xLjYyOS00LjQwNS0xLjYyOS03LjQ5OGMwLTIuNjk0LDAuNTc2LTUuMDYyLDEuNzI3LTcuMTAyYzEuMTUxLTIuMDM4LDIuNzEzLTMuNzQ5LDQuNjg3LTUuMTMgYzEuOTcyLTEuMzgyLDQuMzA3LTIuNDE4LDcuMDA0LTMuMTA2YzIuNjk3LTAuNjkxLDUuNTktMS4wMzYsOC42ODMtMS4wMzZjNy4yOTksMCwxMi44MjUsMS40MywxNi41NzQsNC4yOTEgYzMuNzQ3LDIuODYxLDUuOTg0LDYuNTk0LDYuNzA2LDExLjE5NmgtMTQuNDAzYy0wLjk4Ni0zLjc0OS0zLjk0Ni01LjYyMi04Ljg3Ny01LjYyMmMtMi4zNywwLTQuMjYxLDAuNDYtNS42NzUsMS4zODIgYy0xLjQxNCwwLjkyMi0yLjEyLDIuMjM1LTIuMTIsMy45NDZjMCwwLjk4NiwwLjMyOSwxLjc5MywwLjk4NiwyLjQxOGMwLjY1OSwwLjYyNCwxLjU4MSwxLjEzNSwyLjc2MywxLjUyOCBjMS4xODUsMC4zOTYsMi41NjYsMC43MjUsNC4xNDUsMC45ODZjMS41NzgsMC4yNjUsMy4yNTUsMC41Niw1LjAzLDAuODljMi4zNjcsMC4zOTMsNC43MzcsMC45MDQsNy4xMDQsMS41MjggYzIuMzY3LDAuNjI3LDQuNTA0LDEuNTYyLDYuNDExLDIuODExYzEuOTA4LDEuMjUxLDMuNDcsMi45MTIsNC42ODcsNC45ODJjMS4yMTcsMi4wNzIsMS44MjUsNC43NTMsMS44MjUsOC4wNDIgYzAsMi44MjctMC41OTIsNS4zMjctMS43NzUsNy40OThjLTEuMTg1LDIuMTY4LTIuODI5LDMuOTgtNC45MzQsNS40MjZjLTIuMTA3LDEuNDQ4LTQuNjA0LDIuNTMyLTcuNDk4LDMuMjU1IGMtMi44OTYsMC43MjMtNi4wNTIsMS4wODQtOS40NzIsMS4wODRDNjI1LjQ3OSwzMTguNDg3LDYyMi4wNTcsMzE4LjA1OSw2MTkuMDMzLDMxNy4yMDZ6IiBzdHlsZT0iZmlsbDogcmdiKDI0NSwgMTAsIDM1KTsiPjwvcGF0aD4KPHBhdGggY2xhc3M9InN0MCIgZD0iTTY3MC4xMzIsMzE3LjIwNmMtMy4wMjYtMC44NTUtNS42MDYtMi4wNzItNy43NDMtMy42NTFjLTIuMTM5LTEuNTc4LTMuODE1LTMuNDY4LTUuMDMyLTUuNjczIGMtMS4yMTctMi4yMDMtMS45MjQtNC42Mi0yLjEyLTcuMjUxaDE0LjZjMC40NiwyLjUsMS41OTQsNC40MDgsMy40MDQsNS43MjFjMS44MDcsMS4zMTgsNC4yMjUsMS45NzQsNy4yNTEsMS45NzQgYzIuNzYzLDAsNC44OTktMC41MjYsNi40MTQtMS41NzhjMS41MTItMS4wNTIsMi4yNjktMi41MzIsMi4yNjktNC40NGMwLTEuMTg1LTAuMzY0LTIuMTM2LTEuMDg2LTIuODYxIGMtMC43MjUtMC43MjMtMS43MTEtMS4zMTUtMi45Ni0xLjc3NWMtMS4yNDktMC40Ni0yLjY4MS0wLjgzOS00LjI5MS0xLjEzNWMtMS42MTMtMC4yOTctMy4zNC0wLjYwOC01LjE3OS0wLjkzOCBjLTIuMzY3LTAuNDYtNC42NzEtMC45ODYtNi45MDUtMS41NzhjLTIuMjM3LTAuNTkyLTQuMjQzLTEuNDgtNi4wMTgtMi42NjVjLTEuNzc3LTEuMTgzLTMuMjA3LTIuNzI3LTQuMjkzLTQuNjM2IGMtMS4wODQtMS45MDUtMS42MjYtNC40MDUtMS42MjYtNy40OThjMC0yLjY5NCwwLjU3NC01LjA2MiwxLjcyNS03LjEwMmMxLjE1MS0yLjAzOCwyLjcxNS0zLjc0OSw0LjY4Ny01LjEzIGMxLjk3NC0xLjM4Miw0LjMwNy0yLjQxOCw3LjAwNC0zLjEwNmMyLjY5Ny0wLjY5MSw1LjU5LTEuMDM2LDguNjgzLTEuMDM2YzcuMzAxLDAsMTIuODI1LDEuNDMsMTYuNTc0LDQuMjkxIGMzLjc0OSwyLjg2MSw1Ljk4NCw2LjU5NCw2LjcwOSwxMS4xOTZoLTE0LjQwM2MtMC45ODgtMy43NDktMy45NDYtNS42MjItOC44NzktNS42MjJjLTIuMzY3LDAtNC4yNTksMC40Ni01LjY3MywxLjM4MiBjLTEuNDE2LDAuOTIyLTIuMTIsMi4yMzUtMi4xMiwzLjk0NmMwLDAuOTg2LDAuMzI3LDEuNzkzLDAuOTg2LDIuNDE4YzAuNjU2LDAuNjI0LDEuNTc4LDEuMTM1LDIuNzYzLDEuNTI4IGMxLjE4MywwLjM5NiwyLjU2NCwwLjcyNSw0LjE0MiwwLjk4NmMxLjU3OCwwLjI2NSwzLjI1NSwwLjU2LDUuMDMyLDAuODljMi4zNjcsMC4zOTMsNC43MzUsMC45MDQsNy4xMDIsMS41MjggYzIuMzY3LDAuNjI3LDQuNTA0LDEuNTYyLDYuNDE0LDIuODExYzEuOTA1LDEuMjUxLDMuNDY4LDIuOTEyLDQuNjg0LDQuOTgyYzEuMjE3LDIuMDcyLDEuODI1LDQuNzUzLDEuODI1LDguMDQyIGMwLDIuODI3LTAuNTksNS4zMjctMS43NzUsNy40OThjLTEuMTg1LDIuMTY4LTIuODI5LDMuOTgtNC45MzQsNS40MjZjLTIuMTA0LDEuNDQ4LTQuNjA0LDIuNTMyLTcuNDk2LDMuMjU1IGMtMi44OTYsMC43MjMtNi4wNTIsMS4wODQtOS40NzIsMS4wODRDNjc2LjU3NywzMTguNDg3LDY3My4xNTgsMzE4LjA1OSw2NzAuMTMyLDMxNy4yMDZ6IiBzdHlsZT0iZmlsbDogcmdiKDI0NSwgMTAsIDM1KTsiPjwvcGF0aD4KPC9nPgo8L2c+CjxnPgo8cGF0aCBjbGFzcz0ic3QwIiBkPSJNNjA2Ljc4LDIyOS4zMDZoMjkuNjYxdi01NC4xODdjMC0xMi4zNiw3LjIyNS0yMS4xMDcsMTcuODcyLTIxLjEwN2MxMC4yNjcsMCwxNS41OTEsNy4yMjcsMTUuNTkxLDE3LjQ5NSAgICB2NTcuOGgyOS42NjF2LTYzLjUwM2MwLTIxLjQ4OC0xMi45MjgtMzYuNjk5LTMzLjg0NC0zNi42OTljLTEzLjMwOCwwLTIyLjYyNiw1LjcwNS0yOS42NjEsMTYuMTYyaC0wLjU3MXYtMTMuMzA5aC0yOC43MVYyMjkuMzA2eiBNNTQ4LjU5OCwxMjkuMjk1Yy0zMC45OTMsMC01MS43MTYsMjIuMjQ2LTUxLjcxNiw1MS41MjdjMCwyOS4wOTIsMjAuNzI0LDUxLjUyOCw1MS43MTYsNTEuNTI4czUxLjcxNi0yMi40MzYsNTEuNzE2LTUxLjUyOCAgICBDNjAwLjMxNCwxNTEuNTQsNTc5LjU5LDEyOS4yOTUsNTQ4LjU5OCwxMjkuMjk1eiBNNTQ4LjQwOCwyMTAuNDgzYy0xNC4wNzIsMC0yMS40ODUtMTEuNzg3LTIxLjQ4NS0yOS42NjEgICAgYzAtMTguMDYzLDcuNDEzLTI5LjY2MiwyMS40ODUtMjkuNjYyYzE0LjA2OSwwLDIxLjg2NSwxMS41OTgsMjEuODY1LDI5LjY2MkM1NzAuMjczLDE5OC42OTYsNTYyLjQ3NywyMTAuNDgzLDU0OC40MDgsMjEwLjQ4M3ogTTQxMi40NiwyMjkuMzA2aDgzLjI4di0yMy4zODVoLTQ3LjE1M3YtMC41NzNsNDUuMDYyLTUwLjU3NnYtMjIuODE0SDQxMi40NnYyMy4zODVoNDUuNjMzdjAuNTcxTDQxMi40NiwyMDYuODdWMjI5LjMwNnogTTM3NC40MjksMjI5LjMwNmgyOS44NTF2LTk3LjM0OGgtMjkuODUxVjIyOS4zMDZ6IE0zMDUuMjE5LDIyOS4zMDZoMjkuNjYxdi00NC42OGMwLTIwLjM0NiwxMi4xNjktMjkuMjgzLDMwLjgwMi0yNi44MWgwLjU3MSAgICB2LTI1LjY2OGMtMS41MjItMC41NzEtMy4yMzItMC43NjEtNi4wODQtMC43NjFjLTExLjU5OCwwLTE5LjM5NCw1LjMyMy0yNi4wNSwxNi43MzFoLTAuNTcxdi0xNi4xNmgtMjguMzI5VjIyOS4zMDZ6IE0yNTAuNjUxLDIxMC42NzVjLTEzLjEyLDAtMjEuMTA1LTguNTU5LTIyLjYyNy0yMS42NzVoNzAuMTZjMC4xOS0yMC45MTgtNS4zMjUtMzcuNjUtMTYuOTIzLTQ4LjEwNyAgICBjLTguMTc0LTcuNjA1LTE5LjAxNC0xMS43ODktMzIuNzAzLTExLjc4OWMtMjkuMjc5LDAtNDkuNjI1LDIyLjI0Ni00OS42MjUsNTEuMzM3YzAsMjkuMjgsMTkuMzk0LDUxLjcxNiw1MS41MjcsNTEuNzE2IGMxMi4xNjksMCwyMS44NjUtMy4yMzIsMjkuODUxLTguNzQ3YzguNTU3LTUuODkxLDE0LjY0LTE0LjQ1LDE2LjM1LTIzLjAwNWgtMjguNTE5ICAgIEMyNjUuMjkxLDIwNi44NywyNTkuMzk2LDIxMC42NzUsMjUwLjY1MSwyMTAuNjc1eiBNMjQ5LjEyOSwxNTAuMzk5YzEwLjQ1NywwLDE3LjY4Miw3Ljc5OCwxOC44MjMsMTkuMjA1aC0zOS43MzggICAgQzIzMC40OTcsMTU4LjAwNCwyMzYuNzcsMTUwLjM5OSwyNDkuMTI5LDE1MC4zOTl6IE0zNzQuNDI5LDk3LjM1aDI5Ljg1MXYyNi40M2gtMjkuODUxVjk3LjM1eiIgc3R5bGU9ImZpbGw6IHJnYigyNDUsIDEwLCAzNSk7Ij48L3BhdGg+CjxnPgo8cmFkaWFsR3JhZGllbnQgaWQ9IlNWR0lEXzFfIiBjeD0iLTExMDMuNjk5MyIgY3k9IjI0MjguMDkyMyIgcj0iMzU0LjM2ODciIGdyYWRpZW50VHJhbnNmb3JtPSJtYXRyaXgoMC4wNDk1IC0wLjEzNzEgMC4xNDgzIDAuMDUzNiAtMTQ1LjY0MjggLTY4Ljg2NzcpIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIG9mZnNldD0iMCIgc3R5bGU9InN0b3AtY29sb3I6I0Y1RkYxRSI+PC9zdG9wPgo8c3RvcCBvZmZzZXQ9IjAuMjU3IiBzdHlsZT0ic3RvcC1jb2xvcjojRjVGRjFFIj48L3N0b3A+CjxzdG9wIG9mZnNldD0iMC4yNjU1IiBzdHlsZT0ic3RvcC1jb2xvcjojRjVGQTFFIj48L3N0b3A+CjxzdG9wIG9mZnNldD0iMC40MjMiIHN0eWxlPSJzdG9wLWNvbG9yOiNGNUE2MjAiPjwvc3RvcD4KPHN0b3Agb2Zmc2V0PSIwLjU2MjEiIHN0eWxlPSJzdG9wLWNvbG9yOiNGNTYzMjEiPjwvc3RvcD4KPHN0b3Agb2Zmc2V0PSIwLjY3NzkiIHN0eWxlPSJzdG9wLWNvbG9yOiNGNTMzMjIiPjwvc3RvcD4KPHN0b3Agb2Zmc2V0PSIwLjc2NTciIHN0eWxlPSJzdG9wLWNvbG9yOiNGNTE1MjMiPjwvc3RvcD4KPHN0b3Agb2Zmc2V0PSIwLjgxNTUiIHN0eWxlPSJzdG9wLWNvbG9yOiNGNTBBMjMiPjwvc3RvcD4KPC9yYWRpYWxHcmFkaWVudD4KPHBhdGggY2xhc3M9InN0MSIgZD0iTTE2NC4yMDEsMjI4LjA5NWwtMzYuOTA4LTk2LjEzN0g5Ny4zNWwzNi45MDgsOTYuMTM3YzAuMjgsMC43MzMsMC45ODMsMS4yMTMsMS43NjUsMS4yMTNoMjkuOTQzIEMxNjUuMTg0LDIyOS4zMDgsMTY0LjQ4MSwyMjguODI4LDE2NC4yMDEsMjI4LjA5NXoiIHN0eWxlPSJmaWxsOiB1cmwoI1NWR0lEXzFfKTsiPjwvcGF0aD4KPHBhdGggY2xhc3M9InN0MCIgZD0iTTEzNy43ODcsMjI4LjA5NWwzNi45MDgtOTYuMTM3aDI5Ljk0M2wtMzYuOTA4LDk2LjEzN2MtMC4yOCwwLjczMy0wLjk4MywxLjIxMy0xLjc2NSwxLjIxM2gtMjkuOTQzIEMxMzYuODA1LDIyOS4zMDgsMTM3LjUwOCwyMjguODI4LDEzNy43ODcsMjI4LjA5NXoiIHN0eWxlPSJmaWxsOiByZ2IoMjQ1LCAxMCwgMzUpOyI+PC9wYXRoPgo8L2c+CjwvZz4KPC9nPgo8L3N2Zz4=" alt="Verizon Business" class="header-logo-svg" />
+            </a>
+            <div class="header-right">
+              <span class="header-menu">☰</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Render cards (grid layout)
+    function renderCards(cards) {
+      if (!cards || cards.length === 0) return '';
+      
+      const cardHTML = cards.map(card => `
+        <div class="card">
+          ${card.icon ? `<div class="card-icon">${card.icon}</div>` : ''}
+          ${card.image ? `<img src="${card.image}" class="card-icon colored" alt="${card.label}" />` : ''}
+          <div class="card-value">${card.value || ''}</div>
+          <div class="card-label">${card.label || ''}</div>
+        </div>
+      `).join('');
+      
+      return `<div class="card-grid">${cardHTML}</div>`;
+    }
+
+    // Render action buttons
+    function renderActions(actions) {
+      if (!actions || actions.length === 0) return '';
+      
+      return actions.map(action => {
+        if (action.style === 'primary') {
+          return `
+            <button class="primary-button" onclick="performAction('${action.type}', '${action.url || ''}')">
+              ${action.text}
+            </button>
+          `;
+        } else if (action.style === 'menu') {
+          return `
+            <button class="menu-item" onclick="performAction('${action.type}', '${action.url || ''}')">
+              ${action.icon ? `<span class="menu-item-icon">${action.icon}</span>` : ''}
+              <span class="menu-item-text">${action.text}</span>
+            </button>
+          `;
+        } else {
+          return `
+            <button class="action-button" onclick="performAction('${action.type}', '${action.url || ''}')">
+              ${action.icon ? `<span class="action-button-icon">${action.icon}</span>` : ''}
+              <span class="action-button-text">${action.text}</span>
+            </button>
+          `;
+        }
+      }).join('');
+    }
+
+    // Render status section
+    function renderStatus(status) {
+      if (!status) return '';
+      
+      const itemsHTML = status.items.map(item => `
+        <div class="status-item">
+          <span>${item.label}:</span>
+          <span class="status-value">${item.value}</span>
+        </div>
+      `).join('');
+      
+      return `
+        <div class="status-section">
+          <div class="status-title">${status.title}</div>
+          ${itemsHTML}
+        </div>
+      `;
+    }
+
+    // Render message section
+    function renderMessage(message) {
+      if (!message) return '';
+      
+      return `
+        <div class="message-section">
+          ${message.title ? `<div class="message-title">${message.title}</div>` : ''}
+          ${message.text ? `<div class="message-text">${message.text}</div>` : ''}
+        </div>
+      `;
+    }
+
+    // Render subscription alert
+    function renderSubscription(subscription) {
+      if (!subscription) return '';
+      
+      return `
+        <div class="subscription-alert">
+          <div class="subscription-alert-title">${subscription.title}</div>
+          <div class="subscription-alert-text">${subscription.text}</div>
+        </div>
+      `;
+    }
+
+    // Render text only content
+    function renderTextOnly(textData) {
+      if (!textData) return '';
+      
+      return `
+        <div class="text-display">
+          ${textData.heading ? `<h2>${textData.heading}</h2>` : ''}
+          ${textData.paragraphs ? textData.paragraphs.map(p => `<p>${p}</p>`).join('') : ''}
+        </div>
+      `;
+    }
+
+    // Render menu section
+    function renderMenu(menuItems) {
+      if (!menuItems || menuItems.length === 0) return '';
+      
+      const itemsHTML = menuItems.map(item => `
+        <button class="menu-item" onclick="performAction('${item.type}', '${item.url || ''}')">
+          ${item.icon ? `<span class="menu-item-icon">${item.icon}</span>` : ''}
+          <span class="menu-item-text">${item.text}</span>
+        </button>
+      `).join('');
+      
+      return `<div class="menu-section">${itemsHTML}</div>`;
+    }
+
+    // Main render function
+    async function render() {
+      const app = document.getElementById('app');
+      
+      try {
+        const data = await getData();
+        
+        let html = '';
+        
+        // Render components based on available data
+        html += renderHeader(data.header);
+        html += renderCards(data.cards);
+        html += renderActions(data.actions);
+        html += renderStatus(data.status);
+        html += renderMessage(data.message);
+        html += renderSubscription(data.subscription);
+        html += renderTextOnly(data.textOnly);
+        html += renderMenu(data.menuItems);
+        
+        app.innerHTML = html;
+        
+      } catch (error) {
+        app.innerHTML = `
+          <div class="error">
+            <h2>Error Loading Data</h2>
+            <p>${error.message}</p>
+          </div>
+        `;
+      }
+    }
+
+    // Action handler
+    function performAction(type, url) {
+      console.log('Action triggered:', type, url);
+      
+      // If URL is provided, use it
+      if (url) {
+        window.location.href = url;
+        return;
+      }
+      
+      // Android deep links
+      if (/android/i.test(navigator.userAgent)) {
+        const deepLinks = {
+          settings: 'vzcloud://settings',
+          home: 'vzcloud://home',
+          backup: 'vzcloud://backup',
+          gallery: 'vzcloud://gallery',
+          subscribe: 'vzcloud://subscribe'
+        };
+        
+        if (deepLinks[type]) {
+          window.location.href = deepLinks[type];
+          
+          // Fallback to intent
+          setTimeout(() => {
+            window.location.href = 
+              `intent://${type}#Intent;scheme=vzcloud;package=com.vcast.mediamanager;end`;
+          }, 1500);
+          return;
+        }
+      }
+      
+      // Default fallback
+      window.location.href = 'https://verizoncloud.verizon.com/home';
+    }
+
+    // Back button handler
+    function goBack() {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = 'https://verizoncloud.verizon.com/home';
+      }
+    }
+
+    // Initialize on page load
+    window.addEventListener('DOMContentLoaded', render);
+  </script>
+</body>
+</html>

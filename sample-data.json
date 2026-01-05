@@ -1,0 +1,399 @@
+{
+  "description": "Verizon Cloud Dashboard - Sample JSON Data Structure",
+  "imageRecommendations": {
+    "note": "For production, use these recommended image types and sources",
+    "sources": [
+      "Verizon Design System Icons: https://www.verizon.com/dam/icons/",
+      "Font Awesome Icons: https://cdnjs.cloudflare.com/ajax/libs/font-awesome/",
+      "Material Design Icons: https://fonts.googleapis.com/icon?family=Material+Icons",
+      "Custom SVG Icons: Create brand-aligned SVG icons"
+    ],
+    "categories": {
+      "cloud_storage": {
+        "photos": "cloud-photos.svg or photo-library-icon.svg",
+        "documents": "documents-icon.svg or file-icon.svg",
+        "videos": "video-icon.svg or media-icon.svg",
+        "storage": "cloud-storage-icon.svg or database-icon.svg",
+        "backup": "backup-icon.svg or sync-icon.svg"
+      },
+      "devices": {
+        "smartphone": "smartphone-icon.png or mobile-device.svg",
+        "tablet": "tablet-icon.png or ipad-icon.svg",
+        "laptop": "laptop-icon.png or computer-icon.svg"
+      },
+      "services": {
+        "5g": "5g-icon.svg",
+        "internet": "internet-icon.svg or wifi-icon.svg",
+        "tv": "fios-tv-icon.svg or entertainment-icon.svg"
+      }
+    }
+  },
+  "examples": [
+    {
+      "name": "RCS Message Format (Google RBM)",
+      "description": "Google Rich Business Messaging format - automatically converted to dashboard format",
+      "data": {
+        "contentMessage": {
+          "richCard": {
+            "standaloneCard": {
+              "cardOrientation": "VERTICAL",
+              "cardContent": {
+                "title": "UNLEASH YOUR CLOUD'S FULL POTENTIAL",
+                "description": "You have 1.9TB of unused storage waiting! \n\n📊 Current Stats:\n• 3 Photos\n• 2 Documents\n• 0 Videos\n• 3.8GB Used / 2TB Total\n• Last Backup: 15/Sep/2022",
+                "media": {
+                  "height": "MEDIUM",
+                  "contentInfo": {
+                    "fileUrl": "https://vzcloud.s3.us-east-2.amazonaws.com/cloud/cloud_status.png",
+                    "forceRefresh": "false"
+                  }
+                },
+                "suggestions": [
+                  {
+                    "reply": {
+                      "text": "Upload More Now",
+                      "postbackData": "upload_now_clicked"
+                    }
+                  },
+                  {
+                    "reply": {
+                      "text": "View Details",
+                      "postbackData": "view_details_clicked"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Cloud Dashboard Example",
+      "data": {
+        "header": {
+          "title": "Verizon Cloud",
+          "logo": "verizon",
+          "showBack": true
+        },
+        "cards": [
+          {
+            "icon": "📷",
+            "image": "https://www.verizon.com/dam/icons/cloud-photos.svg",
+            "value": "1,234",
+            "label": "Photos"
+          },
+          {
+            "icon": "📄",
+            "image": "https://www.verizon.com/dam/icons/documents.svg",
+            "value": "89",
+            "label": "Documents"
+          },
+          {
+            "icon": "🎬",
+            "image": "https://www.verizon.com/dam/icons/video.svg",
+            "value": "45",
+            "label": "Videos"
+          },
+          {
+            "icon": "💾",
+            "image": "https://www.verizon.com/dam/icons/cloud-storage.svg",
+            "value": "24.5 GB",
+            "label": "Storage Used"
+          }
+        ],
+        "actions": [
+          {
+            "icon": "☁️",
+            "image": "https://www.verizon.com/dam/icons/backup.svg",
+            "text": "Back Up Now",
+            "type": "backup",
+            "style": "primary"
+          }
+        ],
+        "status": {
+          "title": "Cloud Status",
+          "items": [
+            { "label": "Photos", "value": "1,234" },
+            { "label": "Documents", "value": "89" },
+            { "label": "Videos", "value": "45" },
+            { "label": "Audio Files", "value": "12" },
+            { "label": "Storage Used", "value": "24.5 GB" },
+            { "label": "Storage Available", "value": "75.5 GB" },
+            { "label": "Last Backup", "value": "January 3, 2026 at 7:30 AM" }
+          ]
+        },
+        "message": {
+          "title": "Your content is backed up",
+          "text": "All your photos, videos, and documents are safely stored in Verizon Cloud."
+        }
+      }
+    },
+    {
+      "name": "Business Dashboard Example",
+      "data": {
+        "header": {
+          "title": "My Verizon Business",
+          "logo": "verizon",
+          "showBack": false
+        },
+        "cards": [
+          {
+            "icon": "📱",
+            "image": "https://www.verizon.com/dam/devices/smartphone.png",
+            "value": "5",
+            "label": "Active Lines"
+          },
+          {
+            "icon": "💳",
+            "image": "https://www.verizon.com/dam/icons/billing.svg",
+            "value": "$342.50",
+            "label": "Current Bill"
+          },
+          {
+            "icon": "📊",
+            "image": "https://www.verizon.com/dam/icons/data-usage.svg",
+            "value": "45 GB",
+            "label": "Data Used"
+          },
+          {
+            "icon": "🌐",
+            "image": "https://www.verizon.com/dam/icons/5g-icon.svg",
+            "value": "5G UW",
+            "label": "Network"
+          }
+        ],
+        "actions": [
+          {
+            "icon": "💳",
+            "text": "Pay Bill",
+            "type": "payment",
+            "style": "primary",
+            "url": "https://www.verizon.com/business/account/pay-bill"
+          },
+          {
+            "icon": "📱",
+            "text": "Add New Line",
+            "type": "addline",
+            "style": "action"
+          },
+          {
+            "icon": "📊",
+            "text": "View Usage Details",
+            "type": "usage",
+            "style": "action"
+          }
+        ],
+        "status": {
+          "title": "Account Summary",
+          "items": [
+            { "label": "Account Number", "value": "123-456-7890" },
+            { "label": "Active Lines", "value": "5" },
+            { "label": "Plan Type", "value": "Business Unlimited" },
+            { "label": "Billing Cycle", "value": "January 1 - 31" },
+            { "label": "Next Bill Date", "value": "February 1, 2026" },
+            { "label": "Auto Pay", "value": "Enabled" }
+          ]
+        },
+        "subscription": {
+          "title": "Special Offer Available",
+          "text": "Add Disney+ and Hulu to your plan for only $10/month. Limited time offer!"
+        }
+      }
+    },
+    {
+      "name": "Device Management Example",
+      "data": {
+        "header": {
+          "title": "My Devices",
+          "logo": "verizon",
+          "showBack": true
+        },
+        "textOnly": {
+          "heading": "Manage Your Devices",
+          "paragraphs": [
+            "View and manage all devices connected to your Verizon account.",
+            "Check device status, payment plans, and protection coverage.",
+            "Easily upgrade or add new devices to your account."
+          ]
+        },
+        "menuItems": [
+          {
+            "icon": "📱",
+            "text": "iPhone 15 Pro Max",
+            "type": "device",
+            "url": "https://www.verizon.com/business/devices/iphone-15-pro-max"
+          },
+          {
+            "icon": "⌚",
+            "text": "Apple Watch Series 9",
+            "type": "device",
+            "url": "https://www.verizon.com/business/devices/apple-watch"
+          },
+          {
+            "icon": "💻",
+            "text": "iPad Pro 12.9\"",
+            "type": "device",
+            "url": "https://www.verizon.com/business/devices/ipad-pro"
+          },
+          {
+            "icon": "🔌",
+            "text": "5G Home Internet Router",
+            "type": "device",
+            "url": "https://www.verizon.com/business/5g-home-internet"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Service Dashboard Example",
+      "data": {
+        "header": {
+          "title": "Verizon Services",
+          "logo": "verizon",
+          "showBack": false
+        },
+        "cards": [
+          {
+            "icon": "📶",
+            "image": "https://www.verizon.com/dam/icons/5g-icon.svg",
+            "value": "5G UW",
+            "label": "Mobile Network"
+          },
+          {
+            "icon": "🏠",
+            "image": "https://www.verizon.com/dam/icons/home-internet.svg",
+            "value": "1 Gig",
+            "label": "Home Internet"
+          },
+          {
+            "icon": "📺",
+            "image": "https://www.verizon.com/dam/icons/fios-tv.svg",
+            "value": "Premium",
+            "label": "Fios TV"
+          },
+          {
+            "icon": "☁️",
+            "image": "https://www.verizon.com/dam/icons/cloud.svg",
+            "value": "100 GB",
+            "label": "Cloud Storage"
+          }
+        ],
+        "actions": [
+          {
+            "icon": "⚙️",
+            "text": "Manage Services",
+            "type": "settings",
+            "style": "primary"
+          },
+          {
+            "icon": "📞",
+            "text": "Contact Support",
+            "type": "support",
+            "style": "action"
+          }
+        ],
+        "message": {
+          "title": "Upgrade to 5G Ultra Wideband",
+          "text": "Experience the fastest 5G network available. Upgrade your plan today and get 3 months free."
+        }
+      }
+    }
+  ],
+  "jsonStructure": {
+    "description": "Complete JSON structure for the Verizon Cloud Dashboard",
+    "schema": {
+      "header": {
+        "type": "object",
+        "optional": true,
+        "properties": {
+          "title": "string - Header title text",
+          "logo": "string - 'verizon' for Verizon logo, or custom text/image URL",
+          "showBack": "boolean - Show back button"
+        }
+      },
+      "cards": {
+        "type": "array",
+        "optional": true,
+        "description": "Grid of information cards (2 columns)",
+        "items": {
+          "icon": "string - Emoji or unicode character",
+          "image": "string (optional) - Full image URL (overrides icon)",
+          "value": "string - Main display value (number, size, status)",
+          "label": "string - Description label"
+        }
+      },
+      "actions": {
+        "type": "array",
+        "optional": true,
+        "description": "Action buttons",
+        "items": {
+          "icon": "string - Emoji or unicode character",
+          "image": "string (optional) - Full image URL",
+          "text": "string - Button text",
+          "type": "string - Action type for handlers",
+          "style": "string - 'primary' (red button), 'action' (white button), 'menu' (menu item)",
+          "url": "string (optional) - Direct URL to navigate"
+        }
+      },
+      "status": {
+        "type": "object",
+        "optional": true,
+        "description": "Status information section",
+        "properties": {
+          "title": "string - Section title",
+          "items": "array - List of label/value pairs"
+        }
+      },
+      "message": {
+        "type": "object",
+        "optional": true,
+        "description": "Alert/message box",
+        "properties": {
+          "title": "string - Message title",
+          "text": "string - Message content"
+        }
+      },
+      "subscription": {
+        "type": "object",
+        "optional": true,
+        "description": "Subscription alert (same styling as message)",
+        "properties": {
+          "title": "string - Alert title",
+          "text": "string - Alert content"
+        }
+      },
+      "textOnly": {
+        "type": "object",
+        "optional": true,
+        "description": "Text-only content section",
+        "properties": {
+          "heading": "string - Main heading",
+          "paragraphs": "array of strings - Paragraph content"
+        }
+      },
+      "menuItems": {
+        "type": "array",
+        "optional": true,
+        "description": "Menu-style navigation items",
+        "items": {
+          "icon": "string - Emoji or unicode character",
+          "text": "string - Menu item text",
+          "type": "string - Action type",
+          "url": "string (optional) - Navigation URL"
+        }
+      }
+    }
+  },
+  "usage": {
+    "urlParameter": {
+      "description": "Pass JSON data as base64-encoded URL parameter",
+      "format": "?data=BASE64_ENCODED_JSON",
+      "example": "vz-cloud-dashboard.html?data=eyJoZWFkZXIiOnsidGl0bGUiOiJWZXJpem9uIENsb3VkIn19"
+    },
+    "apiEndpoint": {
+      "description": "Fetch JSON data from API endpoint",
+      "format": "?apiUrl=YOUR_API_ENDPOINT",
+      "example": "vz-cloud-dashboard.html?apiUrl=https://api.example.com/dashboard"
+    }
+  }
+}
