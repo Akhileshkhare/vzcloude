@@ -415,57 +415,57 @@
       // ---- iOS HANDLING ----
       if (deviceInfo.isIOS) {
         const appStoreUrl = "https://apps.apple.com/us/app/verizon-cloud/id561856639";
-        let hasLeftPage = false;
+        let appOpened = false;
         
-        // Detect if user leaves the page (app opened)
-        const handleVisibilityChange = () => {
-          if (document.hidden) {
-            hasLeftPage = true;
-          }
+        // Try to open the app
+        const tryOpenApp = (deepLink) => {
+          const startTime = Date.now();
+          
+          // Listen for page visibility changes
+          const visibilityHandler = () => {
+            if (document.hidden) {
+              appOpened = true;
+            }
+          };
+          
+          // Listen for blur event (when user leaves the page)
+          const blurHandler = () => {
+            appOpened = true;
+          };
+          
+          document.addEventListener('visibilitychange', visibilityHandler);
+          window.addEventListener('blur', blurHandler);
+          
+          // Attempt to open deep link
+          window.location.href = deepLink;
+          
+          // Check after timeout if app opened
+          setTimeout(() => {
+            document.removeEventListener('visibilitychange', visibilityHandler);
+            window.removeEventListener('blur', blurHandler);
+            
+            // If page is still visible and user hasn't left, app is not installed
+            if (!appOpened && !document.hidden) {
+              window.location.href = appStoreUrl;
+            }
+          }, 2500);
         };
-        
-        document.addEventListener('visibilitychange', handleVisibilityChange);
         
         switch (type) {
           case "settings":
-            window.location.href = "vzcloud://settings";
-            setTimeout(() => {
-              document.removeEventListener('visibilitychange', handleVisibilityChange);
-              if (!hasLeftPage) {
-                // App is not installed, redirect to App Store
-                window.location.href = appStoreUrl;
-              }
-            }, 2500);
+            tryOpenApp("vzcloud://settings");
             return;
    
           case "home":
-            window.location.href = "vzcloud://home";
-            setTimeout(() => {
-              document.removeEventListener('visibilitychange', handleVisibilityChange);
-              if (!hasLeftPage) {
-                window.location.href = appStoreUrl;
-              }
-            }, 2500);
+            tryOpenApp("vzcloud://home");
             return;
    
           case "gallery":
-            window.location.href = "vzcloud://gallery";
-            setTimeout(() => {
-              document.removeEventListener('visibilitychange', handleVisibilityChange);
-              if (!hasLeftPage) {
-                window.location.href = appStoreUrl;
-              }
-            }, 2500);
+            tryOpenApp("vzcloud://gallery");
             return;
    
           case "backup":
-            window.location.href = "vzcloud://backup";
-            setTimeout(() => {
-              document.removeEventListener('visibilitychange', handleVisibilityChange);
-              if (!hasLeftPage) {
-                window.location.href = appStoreUrl;
-              }
-            }, 2500);
+            tryOpenApp("vzcloud://backup");
             return;
         }
       }
