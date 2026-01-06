@@ -398,12 +398,10 @@
               window.location.href =
                 "intent://settings#Intent;scheme=vzcloud;package=com.vcast.mediamanager;end";
             }, 1500);
-            // Show message if app is not installed
+            // Redirect to Play Store if app is not installed
             setTimeout(() => {
               if (document.visibilityState === 'visible') {
-                alert("📱 Verizon Cloud App Required\n\nThe app is not installed on your device.\n\nPlease install it from the Google Play Store to access all features!");
-                // Optional: Redirect to Play Store
-                // window.location.href = "https://play.google.com/store/apps/details?id=com.vcast.mediamanager";
+                window.location.href = "https://play.google.com/store/apps/details?id=com.vcast.mediamanager";
               }
             }, 3000);
             return;
@@ -416,7 +414,7 @@
             }, 1500);
             setTimeout(() => {
               if (document.visibilityState === 'visible') {
-                alert("📱 Verizon Cloud App Required\n\nThe app is not installed on your device.\n\nPlease install it from the Google Play Store to access this feature!");
+                window.location.href = "https://play.google.com/store/apps/details?id=com.vcast.mediamanager";
               }
             }, 3000);
             return;
@@ -429,7 +427,7 @@
             }, 1500);
             setTimeout(() => {
               if (document.visibilityState === 'visible') {
-                alert("📱 Verizon Cloud App Required\n\nThe app is not installed on your device.\n\nPlease install it from the Google Play Store to access your gallery!");
+                window.location.href = "https://play.google.com/store/apps/details?id=com.vcast.mediamanager";
               }
             }, 3000);
             return;
@@ -442,7 +440,7 @@
             }, 1500);
             setTimeout(() => {
               if (document.visibilityState === 'visible') {
-                alert("📱 Verizon Cloud App Required\n\nThe app is not installed on your device.\n\nPlease install it from the Google Play Store to backup your data!");
+                window.location.href = "https://play.google.com/store/apps/details?id=com.vcast.mediamanager";
               }
             }, 3000);
             return;
