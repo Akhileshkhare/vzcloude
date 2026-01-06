@@ -420,39 +420,52 @@
         const tryOpenApp = (deepLink) => {
           let timeoutId;
           let appOpened = false;
+          let cleanedUp = false;
+          
+          // Centralized cleanup function
+          const cleanup = () => {
+            if (cleanedUp) return;
+            cleanedUp = true;
+            clearTimeout(timeoutId);
+            document.removeEventListener('visibilitychange', visibilityHandler);
+            window.removeEventListener('pagehide', pagehideHandler);
+            window.removeEventListener('blur', blurHandler);
+          };
           
           // Listen for page visibility changes
           const visibilityHandler = () => {
             if (document.hidden) {
               // User left the page - app likely opened
               appOpened = true;
-              clearTimeout(timeoutId);
-              // Clean up listeners
-              document.removeEventListener('visibilitychange', visibilityHandler);
-              window.removeEventListener('pagehide', pagehideHandler);
+              cleanup();
             }
           };
           
           // Listen for pagehide event (when page is unloaded)
           const pagehideHandler = () => {
             appOpened = true;
-            clearTimeout(timeoutId);
+            cleanup();
+          };
+          
+          // Listen for blur event (when window loses focus)
+          const blurHandler = () => {
+            // Window lost focus - likely opening app
+            appOpened = true;
+            cleanup();
           };
           
           document.addEventListener('visibilitychange', visibilityHandler);
           window.addEventListener('pagehide', pagehideHandler);
+          window.addEventListener('blur', blurHandler);
           
           // Attempt to open deep link
           window.location.href = deepLink;
           
           // Check after timeout if app opened
           timeoutId = setTimeout(() => {
-            // Clean up listeners
-            document.removeEventListener('visibilitychange', visibilityHandler);
-            window.removeEventListener('pagehide', pagehideHandler);
-            
-            // Only redirect if page is visible and user never left
-            if (!appOpened && document.visibilityState === 'visible' && !document.hidden) {
+            cleanup();
+            // Only redirect to App Store if app never opened
+            if (!appOpened) {
               window.location.href = appStoreUrl;
             }
           }, 2500);
