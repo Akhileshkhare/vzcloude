@@ -391,58 +391,23 @@
       
       // ---- ANDROID HANDLING ----
       if (deviceInfo.isAndroid) {
+        const playStoreUrl = "https://play.google.com/store/apps/details?id=com.vcast.mediamanager";
+        
         switch (type) {
           case "settings":
-            window.location.href = "vzcloud://settings";
-            setTimeout(() => {
-              window.location.href =
-                "intent://settings#Intent;scheme=vzcloud;package=com.vcast.mediamanager;end";
-            }, 1500);
-            // Redirect to Play Store if app is not installed
-            setTimeout(() => {
-              if (document.visibilityState === 'visible') {
-                window.location.href = "https://play.google.com/store/apps/details?id=com.vcast.mediamanager";
-              }
-            }, 3000);
+            window.location.href = `intent://settings#Intent;scheme=vzcloud;package=com.vcast.mediamanager;S.browser_fallback_url=${encodeURIComponent(playStoreUrl)};end`;
             return;
    
           case "home":
-            window.location.href = "vzcloud://home";
-            setTimeout(() => {
-              window.location.href =
-                "intent://home#Intent;scheme=vzcloud;package=com.vcast.mediamanager;end";
-            }, 1500);
-            setTimeout(() => {
-              if (document.visibilityState === 'visible') {
-                window.location.href = "https://play.google.com/store/apps/details?id=com.vcast.mediamanager";
-              }
-            }, 3000);
+            window.location.href = `intent://home#Intent;scheme=vzcloud;package=com.vcast.mediamanager;S.browser_fallback_url=${encodeURIComponent(playStoreUrl)};end`;
             return;
    
           case "gallery":
-            window.location.href = "vzcloud://gallery";
-            setTimeout(() => {
-              window.location.href =
-                "intent://gallery#Intent;scheme=vzcloud;package=com.vcast.mediamanager;end";
-            }, 1500);
-            setTimeout(() => {
-              if (document.visibilityState === 'visible') {
-                window.location.href = "https://play.google.com/store/apps/details?id=com.vcast.mediamanager";
-              }
-            }, 3000);
+            window.location.href = `intent://gallery#Intent;scheme=vzcloud;package=com.vcast.mediamanager;S.browser_fallback_url=${encodeURIComponent(playStoreUrl)};end`;
             return;
    
           case "backup":
-            window.location.href = "vzcloud://backup";
-            setTimeout(() => {
-              window.location.href =
-                "intent://backup#Intent;scheme=vzcloud;package=com.vcast.mediamanager;end";
-            }, 1500);
-            setTimeout(() => {
-              if (document.visibilityState === 'visible') {
-                window.location.href = "https://play.google.com/store/apps/details?id=com.vcast.mediamanager";
-              }
-            }, 3000);
+            window.location.href = `intent://backup#Intent;scheme=vzcloud;package=com.vcast.mediamanager;S.browser_fallback_url=${encodeURIComponent(playStoreUrl)};end`;
             return;
         }
       }
