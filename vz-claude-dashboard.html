@@ -80,13 +80,19 @@
     // Get URL parameters for cloud data
     function getCloudParams() {
       const params = new URLSearchParams(window.location.search);
+      const getValue = (key) => {
+        const value = params.get(key);
+        // Return null if value is null, empty string, or only whitespace
+        return (value && value.trim() !== '') ? value.trim() : null;
+      };
+      
       return {
-        document: params.get('document') || null,
-        image: params.get('image') || null,
-        video: params.get('video') || null,
-        audio: params.get('audio') || null,
-        storage_used: params.get('storage_used') || null,
-        last_backup: params.get('last_backup') || null
+        document: getValue('document'),
+        image: getValue('image'),
+        video: getValue('video'),
+        audio: getValue('audio'),
+        storage_used: getValue('storage_used'),
+        last_backup: getValue('last_backup')
       };
     }
     
@@ -183,6 +189,9 @@
       const cloudParams = getCloudParams();
       const deviceInfo = detectDevice();
       
+      console.log('Cloud Params:', cloudParams);
+      console.log('Has Cloud Params:', hasCloudParams());
+      
       // Check if cloud parameters are provided
       if (hasCloudParams()) {
         // Build dashboard from URL parameters
@@ -192,7 +201,7 @@
           cards.push({ icon: "📄", value: cloudParams.document, label: "Documents" });
         }
         if (cloudParams.image !== null) {
-          cards.push({ icon: "🖼️", value: cloudParams.image, label: "Images" });
+          cards.push({ icon: "📷", value: cloudParams.image, label: "Photos" });
         }
         if (cloudParams.video !== null) {
           cards.push({ icon: "🎬", value: cloudParams.video, label: "Videos" });
