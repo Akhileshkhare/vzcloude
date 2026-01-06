@@ -415,37 +415,44 @@
       // ---- iOS HANDLING ----
       if (deviceInfo.isIOS) {
         const appStoreUrl = "https://apps.apple.com/us/app/verizon-cloud/id561856639";
-        let appOpened = false;
         
         // Try to open the app
         const tryOpenApp = (deepLink) => {
-          const startTime = Date.now();
+          let timeoutId;
+          let appOpened = false;
           
           // Listen for page visibility changes
           const visibilityHandler = () => {
             if (document.hidden) {
+              // User left the page - app likely opened
               appOpened = true;
+              clearTimeout(timeoutId);
+              // Clean up listeners
+              document.removeEventListener('visibilitychange', visibilityHandler);
+              window.removeEventListener('pagehide', pagehideHandler);
             }
           };
           
-          // Listen for blur event (when user leaves the page)
-          const blurHandler = () => {
+          // Listen for pagehide event (when page is unloaded)
+          const pagehideHandler = () => {
             appOpened = true;
+            clearTimeout(timeoutId);
           };
           
           document.addEventListener('visibilitychange', visibilityHandler);
-          window.addEventListener('blur', blurHandler);
+          window.addEventListener('pagehide', pagehideHandler);
           
           // Attempt to open deep link
           window.location.href = deepLink;
           
           // Check after timeout if app opened
-          setTimeout(() => {
+          timeoutId = setTimeout(() => {
+            // Clean up listeners
             document.removeEventListener('visibilitychange', visibilityHandler);
-            window.removeEventListener('blur', blurHandler);
+            window.removeEventListener('pagehide', pagehideHandler);
             
-            // If page is still visible and user hasn't left, app is not installed
-            if (!appOpened && !document.hidden) {
+            // Only redirect if page is visible and user never left
+            if (!appOpened && document.visibilityState === 'visible' && !document.hidden) {
               window.location.href = appStoreUrl;
             }
           }, 2500);
