@@ -414,33 +414,58 @@
    
       // ---- iOS HANDLING ----
       if (deviceInfo.isIOS) {
+        const appStoreUrl = "https://apps.apple.com/us/app/verizon-cloud/id561856639";
+        let hasLeftPage = false;
+        
+        // Detect if user leaves the page (app opened)
+        const handleVisibilityChange = () => {
+          if (document.hidden) {
+            hasLeftPage = true;
+          }
+        };
+        
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        
         switch (type) {
           case "settings":
             window.location.href = "vzcloud://settings";
             setTimeout(() => {
-              // Show user-friendly message
-              alert("📱 Verizon Cloud App\n\nThe app is not installed on your device.\n\nDownload it from the App Store to access all your cloud features!");
-              // Optionally redirect to App Store
-              // window.location.href = "https://apps.apple.com/app/verizon-cloud";
-            }, 1500);
+              document.removeEventListener('visibilitychange', handleVisibilityChange);
+              if (!hasLeftPage) {
+                // App is not installed, redirect to App Store
+                window.location.href = appStoreUrl;
+              }
+            }, 2500);
             return;
+   
           case "home":
             window.location.href = "vzcloud://home";
             setTimeout(() => {
-              alert("This feature requires the Verizon Cloud app. Please install it from the App Store.");
-            }, 1500);
+              document.removeEventListener('visibilitychange', handleVisibilityChange);
+              if (!hasLeftPage) {
+                window.location.href = appStoreUrl;
+              }
+            }, 2500);
             return;
+   
           case "gallery":
             window.location.href = "vzcloud://gallery";
             setTimeout(() => {
-              alert("This feature requires the Verizon Cloud app. Please install it from the App Store.");
-            }, 1500);
+              document.removeEventListener('visibilitychange', handleVisibilityChange);
+              if (!hasLeftPage) {
+                window.location.href = appStoreUrl;
+              }
+            }, 2500);
             return;
+   
           case "backup":
             window.location.href = "vzcloud://backup";
             setTimeout(() => {
-              alert("This feature requires the Verizon Cloud app. Please install it from the App Store.");
-            }, 1500);
+              document.removeEventListener('visibilitychange', handleVisibilityChange);
+              if (!hasLeftPage) {
+                window.location.href = appStoreUrl;
+              }
+            }, 2500);
             return;
         }
       }
