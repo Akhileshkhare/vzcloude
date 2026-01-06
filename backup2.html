@@ -23,79 +23,6 @@
     const API_URL_PARAM = 'apiUrl';
     const DATA_PARAM = 'data';
     
-    // User Agent Detection
-    function detectDevice() {
-      const ua = navigator.userAgent || navigator.vendor;
-      const isAndroid = /android/i.test(ua);
-      const isIOS = /iPad|iPhone|iPod/.test(ua);
-      const isWindows = /Windows/i.test(ua);
-      const isMac = /Mac/i.test(ua) && !isIOS;
-      const isLinux = /Linux/i.test(ua) && !isAndroid;
-      
-      let deviceType = 'Desktop';
-      let platform = 'Unknown';
-      let browser = 'Unknown';
-      
-      // Detect platform
-      if (isAndroid) {
-        platform = 'Android';
-        deviceType = /mobile/i.test(ua) ? 'Mobile' : 'Tablet';
-      } else if (isIOS) {
-        platform = 'iOS';
-        deviceType = /iPad/.test(ua) ? 'Tablet' : 'Mobile';
-      } else if (isWindows) {
-        platform = 'Windows';
-      } else if (isMac) {
-        platform = 'macOS';
-      } else if (isLinux) {
-        platform = 'Linux';
-      }
-      
-      // Detect browser
-      if (/chrome/i.test(ua) && !/edg/i.test(ua)) {
-        browser = 'Chrome';
-      } else if (/safari/i.test(ua) && !/chrome/i.test(ua)) {
-        browser = 'Safari';
-      } else if (/firefox/i.test(ua)) {
-        browser = 'Firefox';
-      } else if (/edg/i.test(ua)) {
-        browser = 'Edge';
-      } else if (/opera|opr/i.test(ua)) {
-        browser = 'Opera';
-      }
-      
-      return {
-        isAndroid,
-        isIOS,
-        isWindows,
-        isMac,
-        isLinux,
-        deviceType,
-        platform,
-        browser,
-        userAgent: ua
-      };
-    }
-    
-    // Get URL parameters for cloud data
-    function getCloudParams() {
-      const params = new URLSearchParams(window.location.search);
-      return {
-        document: params.get('document') || null,
-        image: params.get('image') || null,
-        video: params.get('video') || null,
-        audio: params.get('audio') || null,
-        storage_used: params.get('storage_used') || null,
-        last_backup: params.get('last_backup') || null
-      };
-    }
-    
-    // Check if any cloud params exist
-    function hasCloudParams() {
-      const params = getCloudParams();
-      return Object.values(params).some(val => val !== null);
-    }
-    
     // Parse RCS JSON format and convert to dashboard format
     function parseRCSData(rcsData) {
       try {
@@ -180,76 +107,6 @@
     // Get data from URL parameters or API
     async function getData() {
       const params = new URLSearchParams(window.location.search);
-      const cloudParams = getCloudParams();
-      const deviceInfo = detectDevice();
-      
-      // Check if cloud parameters are provided
-      if (hasCloudParams()) {
-        // Build dashboard from URL parameters
-        const cards = [];
-        
-        if (cloudParams.document !== null) {
-          cards.push({ icon: "📄", value: cloudParams.document, label: "Documents" });
-        }
-        if (cloudParams.image !== null) {
-          cards.push({ icon: "🖼️", value: cloudParams.image, label: "Images" });
-        }
-        if (cloudParams.video !== null) {
-          cards.push({ icon: "🎬", value: cloudParams.video, label: "Videos" });
-        }
-        if (cloudParams.audio !== null) {
-          cards.push({ icon: "🎵", value: cloudParams.audio, label: "Audio Files" });
-        }
-        if (cloudParams.storage_used !== null) {
-          cards.push({ icon: "💾", value: cloudParams.storage_used, label: "Storage Used" });
-        }
-        if (cloudParams.last_backup !== null) {
-          cards.push({ icon: "☁️", value: cloudParams.last_backup, label: "Last Backup" });
-        }
-        
-        // Check if we have any data to display
-        if (cards.length === 0) {
-          return {
-            header: {
-              title: "Verizon Cloud Dashboard",
-              breadcrumb: [
-                { text: 'Home', url: 'https://www.verizon.com/business' },
-                { text: 'Verizon Cloud', url: '' }
-              ]
-            },
-            cards: [],
-            actions: [],
-            message: {
-              title: "No Data Available",
-              text: "No cloud storage data found. Please sync your device or check your connection."
-            },
-            deviceInfo: deviceInfo,
-            noData: true
-          };
-        }
-        
-        return {
-          header: {
-            title: "Verizon Cloud Dashboard",
-            breadcrumb: [
-              { text: 'Home', url: 'https://www.verizon.com/business' },
-              { text: 'Verizon Cloud', url: '' }
-            ]
-          },
-          cards: cards,
-          actions: [
-            { icon: "☁️", text: "Back Up Now", type: "backup", style: "primary" },
-            { icon: "⚙️", text: "Settings", type: "settings", style: "menu" },
-            { icon: "🏠", text: "Home", type: "home", style: "menu" },
-            { icon: "🖼️", text: "Gallery", type: "gallery", style: "menu" }
-          ],
-          message: {
-            title: `Welcome to Verizon Cloud`,
-            text: `Accessing from ${deviceInfo.platform} ${deviceInfo.deviceType} using ${deviceInfo.browser}`
-          },
-          deviceInfo: deviceInfo
-        };
-      }
       
       // Check if data is passed as URL parameter
       const encodedData = params.get(DATA_PARAM);
@@ -259,12 +116,8 @@
           // Check if it's RCS format
           if (parsedData.contentMessage) {
             const converted = parseRCSData(parsedData);
-            if (converted) {
-              converted.deviceInfo = deviceInfo;
-              return converted;
-            }
+            if (converted) return converted;
           }
-          parsedData.deviceInfo = deviceInfo;
           return parsedData;
         } catch (e) {
           console.error('Error parsing data parameter:', e);
@@ -280,12 +133,8 @@
           // Check if it's RCS format
           if (jsonData.contentMessage) {
             const converted = parseRCSData(jsonData);
-            if (converted) {
-              converted.deviceInfo = deviceInfo;
-              return converted;
-            }
+            if (converted) return converted;
           }
-          jsonData.deviceInfo = deviceInfo;
           return jsonData;
         } catch (e) {
           console.error('Error fetching data from API:', e);
@@ -293,24 +142,8 @@
         }
       }
       
-      // No parameters provided - show "Data not present" message
-      return {
-        header: {
-          title: "Verizon Cloud Dashboard",
-          breadcrumb: [
-            { text: 'Home', url: 'https://www.verizon.com/business' },
-            { text: 'Verizon Cloud', url: '' }
-          ]
-        },
-        cards: [],
-        actions: [],
-        message: {
-          title: "Data Not Present",
-          text: "No cloud storage information is currently available. Please provide data parameters or sync your device."
-        },
-        deviceInfo: deviceInfo,
-        noData: true
-      };
+      // Return sample data for testing
+      return getSampleData();
     }
 
     // Sample data for testing - Verizon Business Theme
@@ -371,91 +204,12 @@
       };
     }
 
-    // Perform action on button click with device-specific deep linking
+    // Perform action on button click
     function performAction(type, url) {
-      const deviceInfo = detectDevice();
-      
       if (url) {
         window.open(url, '_blank');
-        return;
-      }
-      
-      // ---- ANDROID HANDLING ----
-      if (deviceInfo.isAndroid) {
-        switch (type) {
-          case "settings":
-            window.location.href = "vzcloud://settings";
-            setTimeout(() => {
-              window.location.href =
-                "intent://settings#Intent;scheme=vzcloud;package=com.vcast.mediamanager;end";
-            }, 1500);
-            return;
-   
-          case "home":
-            window.location.href = "vzcloud://home";
-            setTimeout(() => {
-              window.location.href =
-                "intent://home#Intent;scheme=vzcloud;package=com.vcast.mediamanager;end";
-            }, 1500);
-            return;
-   
-          case "gallery":
-            window.location.href = "vzcloud://gallery";
-            setTimeout(() => {
-              window.location.href =
-                "intent://gallery#Intent;scheme=vzcloud;package=com.vcast.mediamanager;end";
-            }, 1500);
-            return;
-   
-          case "backup":
-            window.location.href = "vzcloud://backup";
-            setTimeout(() => {
-              window.location.href =
-                "intent://backup#Intent;scheme=vzcloud;package=com.vcast.mediamanager;end";
-            }, 1500);
-            return;
-        }
-      }
-   
-      // ---- iOS HANDLING ----
-      if (deviceInfo.isIOS) {
-        switch (type) {
-          case "settings":
-            window.location.href = "vzcloud://settings";
-            setTimeout(() => {
-              // Show user-friendly message
-              alert("📱 Verizon Cloud App\n\nThe app is not installed on your device.\n\nDownload it from the App Store to access all your cloud features!");
-              // Optionally redirect to App Store
-              // window.location.href = "https://apps.apple.com/app/verizon-cloud";
-            }, 1500);
-            return;
-          case "home":
-            window.location.href = "vzcloud://home";
-            setTimeout(() => {
-              alert("This feature requires the Verizon Cloud app. Please install it from the App Store.");
-            }, 1500);
-            return;
-          case "gallery":
-            window.location.href = "vzcloud://gallery";
-            setTimeout(() => {
-              alert("This feature requires the Verizon Cloud app. Please install it from the App Store.");
-            }, 1500);
-            return;
-          case "backup":
-            window.location.href = "vzcloud://backup";
-            setTimeout(() => {
-              alert("This feature requires the Verizon Cloud app. Please install it from the App Store.");
-            }, 1500);
-            return;
-        }
-      }
-   
-      // ---- FINAL FALLBACK (Web/Desktop) ----
-      // For Windows/Desktop, open web version
-      if (deviceInfo.isWindows || deviceInfo.isMac || deviceInfo.isLinux) {
-        window.open("https://verizoncloud.verizon.com/home", "_blank");
       } else {
-        window.location.href = "https://verizoncloud.verizon.com/home";
+        alert(`Performing action: ${type}`);
       }
     }
 
@@ -636,25 +390,8 @@
     }
 
     // Render message section
-    function renderMessage(message, noData = false) {
+    function renderMessage(message) {
       if (!message) return '';
-      
-      // Special rendering for no-data state
-      if (noData) {
-        return `
-          <div class="no-data-message">
-            <div class="icon">☁️</div>
-            <h2>${message.title || 'No Data Available'}</h2>
-            <p>${message.text || 'No cloud storage data found. Please sync your device or check your connection.'}</p>
-            <div class="suggestions">
-              <div class="suggestion-item">Check your internet connection</div>
-              <div class="suggestion-item">Ensure the Verizon Cloud app is installed</div>
-              <div class="suggestion-item">Try syncing your device again</div>
-              <div class="suggestion-item">Contact support if the issue persists</div>
-            </div>
-          </div>
-        `;
-      }
       
       return `
         <div class="message-section">
@@ -711,34 +448,15 @@
         
         let html = '';
         
-        // Render header
+        // Render components based on available data
         html += renderHeader(data.header);
-        
-        // Check if no data state
-        if (data.noData) {
-          html += renderMessage(data.message, true);
-          // Still render device info and actions if available
-          if (data.deviceInfo) {
-            html += `
-              <div class="device-info-banner">
-                <div class="device-icon">${data.deviceInfo.isAndroid ? '🤖' : data.deviceInfo.isIOS ? '📱' : '💻'}</div>
-                <div class="device-details">
-                  <div class="device-platform">${data.deviceInfo.platform} ${data.deviceInfo.deviceType}</div>
-                  <div class="device-meta">Browser: ${data.deviceInfo.browser}</div>
-                </div>
-              </div>
-            `;
-          }
-        } else {
-          // Normal rendering
-          html += renderCards(data.cards);
-          html += renderActions(data.actions);
-          html += renderStatus(data.status);
-          html += renderMessage(data.message, false);
-          html += renderSubscription(data.subscription);
-          html += renderTextOnly(data.textOnly);
-          html += renderMenu(data.menuItems);
-        }
+        html += renderCards(data.cards);
+        html += renderActions(data.actions);
+        html += renderStatus(data.status);
+        html += renderMessage(data.message);
+        html += renderSubscription(data.subscription);
+        html += renderTextOnly(data.textOnly);
+        html += renderMenu(data.menuItems);
         
         app.innerHTML = html;
         
@@ -750,6 +468,42 @@
           </div>
         `;
       }
+    }
+
+    // Action handler
+    function performAction(type, url) {
+      console.log('Action triggered:', type, url);
+      
+      // If URL is provided, use it
+      if (url) {
+        window.location.href = url;
+        return;
+      }
+      
+      // Android deep links
+      if (/android/i.test(navigator.userAgent)) {
+        const deepLinks = {
+          settings: 'vzcloud://settings',
+          home: 'vzcloud://home',
+          backup: 'vzcloud://backup',
+          gallery: 'vzcloud://gallery',
+          subscribe: 'vzcloud://subscribe'
+        };
+        
+        if (deepLinks[type]) {
+          window.location.href = deepLinks[type];
+          
+          // Fallback to intent
+          setTimeout(() => {
+            window.location.href = 
+              `intent://${type}#Intent;scheme=vzcloud;package=com.vcast.mediamanager;end`;
+          }, 1500);
+          return;
+        }
+      }
+      
+      // Default fallback
+      window.location.href = 'https://verizoncloud.verizon.com/home';
     }
 
     // Back button handler

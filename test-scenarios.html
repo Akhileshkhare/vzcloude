@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Scenarios - Verizon Cloud Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      background: #f6f6f6;
+    }
+    h1 {
+      color: #ee0000;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .scenario-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    .scenario-card {
+      background: white;
+      padding: 24px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+    .scenario-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    }
+    .scenario-title {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 12px;
+      color: #000;
+    }
+    .scenario-desc {
+      color: #666;
+      margin-bottom: 16px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .test-button {
+      display: inline-block;
+      background: #ee0000;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+    .test-button:hover {
+      background: #cd040b;
+    }
+    .device-info {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .device-info h2 {
+      margin-top: 0;
+      color: #ee0000;
+    }
+    .info-item {
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .info-label {
+      font-weight: bold;
+      display: inline-block;
+      width: 150px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧪 Verizon Cloud Dashboard - Test Scenarios</h1>
+  
+  <div class="device-info">
+    <h2>Your Current Device Info</h2>
+    <div class="info-item">
+      <span class="info-label">Platform:</span>
+      <span id="platform"></span>
+    </div>
+    <div class="info-item">
+      <span class="info-label">Device Type:</span>
+      <span id="deviceType"></span>
+    </div>
+    <div class="info-item">
+      <span class="info-label">Browser:</span>
+      <span id="browser"></span>
+    </div>
+    <div class="info-item">
+      <span class="info-label">User Agent:</span>
+      <span id="userAgent" style="word-break: break-all;"></span>
+    </div>
+  </div>
+
+  <div class="scenario-grid">
+    <div class="scenario-card">
+      <div class="scenario-title">📊 Full Data with Params</div>
+      <div class="scenario-desc">
+        Test dashboard with all URL parameters populated - documents, images, videos, audio, storage, and last backup date.
+      </div>
+      <a href="vz-claude-dashboard.html?document=25&image=150&video=10&audio=45&storage_used=3.8GB&last_backup=Jan%206,%202026" class="test-button">Test This</a>
+    </div>
+
+    <div class="scenario-card">
+      <div class="scenario-title">📦 Partial Data</div>
+      <div class="scenario-desc">
+        Test with only some parameters - documents and images only.
+      </div>
+      <a href="vz-claude-dashboard.html?document=12&image=75" class="test-button">Test This</a>
+    </div>
+
+    <div class="scenario-card">
+      <div class="scenario-title">❌ No Data</div>
+      <div class="scenario-desc">
+        Test the no-data state message that appears when no URL parameters are provided.
+      </div>
+      <a href="vz-claude-dashboard.html?document=&image=&video=&audio=" class="test-button">Test This</a>
+    </div>
+
+    <div class="scenario-card">
+      <div class="scenario-title">☁️ Storage Only</div>
+      <div class="scenario-desc">
+        Test with only storage and backup information.
+      </div>
+      <a href="vz-claude-dashboard.html?storage_used=5.2GB&last_backup=Yesterday" class="test-button">Test This</a>
+    </div>
+
+    <div class="scenario-card">
+      <div class="scenario-title">📱 Default Dashboard</div>
+      <div class="scenario-desc">
+        Test the default sample data when no parameters are provided at all.
+      </div>
+      <a href="vz-claude-dashboard.html" class="test-button">Test This</a>
+    </div>
+
+    <div class="scenario-card">
+      <div class="scenario-title">🎬 Media Heavy</div>
+      <div class="scenario-desc">
+        Test with large numbers of videos and images.
+      </div>
+      <a href="vz-claude-dashboard.html?image=1250&video=350&audio=890&storage_used=250GB&last_backup=2%20hours%20ago" class="test-button">Test This</a>
+    </div>
+  </div>
+
+  <script>
+    // Detect device info
+    function detectDevice() {
+      const ua = navigator.userAgent || navigator.vendor;
+      const isAndroid = /android/i.test(ua);
+      const isIOS = /iPad|iPhone|iPod/.test(ua);
+      const isWindows = /Windows/i.test(ua);
+      const isMac = /Mac/i.test(ua) && !isIOS;
+      const isLinux = /Linux/i.test(ua) && !isAndroid;
+      
+      let deviceType = 'Desktop';
+      let platform = 'Unknown';
+      let browser = 'Unknown';
+      
+      if (isAndroid) {
+        platform = 'Android';
+        deviceType = /mobile/i.test(ua) ? 'Mobile' : 'Tablet';
+      } else if (isIOS) {
+        platform = 'iOS';
+        deviceType = /iPad/.test(ua) ? 'Tablet' : 'Mobile';
+      } else if (isWindows) {
+        platform = 'Windows';
+      } else if (isMac) {
+        platform = 'macOS';
+      } else if (isLinux) {
+        platform = 'Linux';
+      }
+      
+      if (/chrome/i.test(ua) && !/edg/i.test(ua)) {
+        browser = 'Chrome';
+      } else if (/safari/i.test(ua) && !/chrome/i.test(ua)) {
+        browser = 'Safari';
+      } else if (/firefox/i.test(ua)) {
+        browser = 'Firefox';
+      } else if (/edg/i.test(ua)) {
+        browser = 'Edge';
+      } else if (/opera|opr/i.test(ua)) {
+        browser = 'Opera';
+      }
+      
+      return { platform, deviceType, browser, userAgent: ua };
+    }
+
+    // Display device info
+    const info = detectDevice();
+    document.getElementById('platform').textContent = info.platform;
+    document.getElementById('deviceType').textContent = info.deviceType;
+    document.getElementById('browser').textContent = info.browser;
+    document.getElementById('userAgent').textContent = info.userAgent;
+  </script>
+</body>
+</html>
